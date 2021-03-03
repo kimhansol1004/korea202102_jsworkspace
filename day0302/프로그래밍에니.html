@@ -49,6 +49,23 @@ function moveRight(){
     document.querySelector("#hero").style.left=a+"px";
 }
 
+function moveLeft(){
+    a = a-5;
+    document.querySelector("#hero").style.left=a+"px";
+}
+
+var y=150;
+function moveUp(){
+    //문서내에 hero라는 요소의 스타일 중 top값을 감소시키자
+    y = y-5; //기존의 y값에 -5 한 값을 최종적으로 y에 대입
+    document.querySelector("#hero").style.top=y+"px";
+}
+
+function moveDown(){
+    y=y+5;
+    document.querySelector("#hero").style.top=y+"px";
+}
+
 //수동으로 하지 말고, 자동으로 moveBg를 나대신 호출해주는 기능이 있다면?
 //자동이라 할수 있다
 function gameLoop(){
@@ -70,9 +87,9 @@ function gameLoop(){
     <button onClick="moveBg();">배경 수동으로 움직이기</button>
     <button onClick="gameLoop()">auto</button>
 
-    <button>좌</button>
+    <button onClick="moveLeft()">좌</button>
     <button onClick="moveRight()">우</button>
-    <button>위</button>
-    <button>아래</button>
+    <button onClick="moveUp()">위</button>
+    <button onClick="moveDown()">아래</button>
 </body>
 </html>

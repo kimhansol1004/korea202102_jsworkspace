@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>카운터</title>
+    <style>
+        input{
+            width: 600px;
+            height: 400px;
+            background-color: dodgerblue;
+            color: white;
+            font-size: 200px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        var n=0;
+        function setCount(){
+            n=n+1; //n 누적, 즉 기존의 n에 1을 더한값을 최종적으로 n에 다시 대입
+            //문서내의 input 요소의 value값을 1씩 증가시켜보자
+            document.querySelector("#txt").value=n;
+        }
+        function auto(){
+            //자동이란? 이미 수동으로 만들어진 코드를 사람이 아닌 컴퓨터가 대신 호출해주는것
+            setInterval("setCount()",1000);   // 1/1000초까지 표현 가능
+        }
+    </script>
+</head>
+<body>
+    <button onClick="setCount()">카운터 증가</button>
+    <button onClick="auto();this.disabled=true">자동 증가</button>
+    <br>
+    <input id="txt" type="text" value="0">
+
+
+</body>
+</html>
