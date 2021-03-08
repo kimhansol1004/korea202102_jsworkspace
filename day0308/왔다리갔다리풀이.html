@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>왔다리갔다리풀이</title>
+    <style>
+        #ball{
+            width: 100px;
+            position: absolute;
+            left: 0px;
+            top: 150px;
+        }
+    </style>
+    <script>
+        var x=0;   //공의 좌표
+        var step=0;  //증가할지, 감소할지를 결정하는 변수  
+        var flag=true;
+        var st;
+
+    function move(){
+        var a= 10; //지역변수
+
+        //문서내의 ball이라는 요소의 style중 left값을 중가시키다가 500이 도달하면
+        //감소시키고, 다시 0에 도달하면 증가시킨다
+        step=(flag)?  10:-10 ; 
+        x = x+step;
+        document.getElementById("ball").style.left=x+"px";
+        //좌표 출력
+        document.querySelector("h1").innerText=x;
+        //개발자는 flag만 만지면, 공의 방향이 바뀔수 있다!
+        flag=(x>=500 || x<=0)?  !flag: flag ;
+
+        //증가값이 홀수인경우 조건에 맞지 않을 수도 있다
+        //flag= (x==500)? false:((x==0)? true:flag);
+
+    }
+    
+    function auto(){ 
+        //사용자 대신, 컴퓨터가 수동함수를 호출해주면 그게 자동이다
+        //따라서 언제나 수동로직을 먼저 작성해야 한다
+        st=setInterval("move()",1) ; //1/1000초 단위짜기 표현 가능
+    }
+    function stop(){
+        //setInterval을 멈추기 위해서는 clearInterval(현재 실행중 interval) 이용
+        clearInterval(st);
+    }
+    </script>
+</head>
+<body>
+    <button onClick="move()">움직이기</button>
+    <button onClick="auto()">자동</button>
+    <button onClick="stop()">멈춤</button>
+    <h1>0</h1>
+    <img id="ball" src="../images/ball.webp">
+</body>
+</html>

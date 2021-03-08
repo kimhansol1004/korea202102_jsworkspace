@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>키보드제어</title>
+<style>
+        #wrapper{
+            margin: auto;
+            width: 1200px; 
+            height: 650px;
+            background: url(../images/bg1.jpg);
+            background-size: 1200px 650px;
+            background-repeat: repeat-x; /*수평방향으로 패턴적용*/
+            position: relative; /*자식 때문에*/
+            overflow: hidden;
+        }
+</style>
+<script>
+var img; //다른 함수에서도 접근이 가능하게 하려면 전역변수로 선언
+            //전역변수로 선언하면, 프로그램이 종료될때까지 그 값을 사용
+            //할수 있다
+var x=0; //프로그램이 끝날때까지 그 값이 10씩 누적될 용도이므로
+            //전역 변수로 선언한다
+var y=200;
+var container; //div는 문자 숫자 논리 값이 아닌 객체형이다 (초기화 할필요가 없다)
+var bgX=0; //숫자값은 반드시 초기화 시켜주자 연산의 가능성이 높다 
+                //undefined인 경우 데이터 베이스의 null과 같아서 연산이 대상이 되지않음
+
+function init(){
+    //우주선을 디자인적으로 생성시키지 말고, 프로그래밍 적으로 생성해보자
+    img=document.createElement("img"); //기존에 없었던 요소를 생성할때
+    img.src="../images/plane.png";
+    img.id="hero"; //프로그래밍 적으로 아이디 부여
+    img.style.width=100+"px";
+    img.style.height=60+"px";
+    //포지션도 지정하자
+    img.style.position="absolute";
+    img.style.left=0+"px";
+    img.style.top=y+"px";
+
+    //생성할때 
+    container=document.getElementById("wrapper"); //이미 존재하는거 가져올때
+
+    //wrapper에 이미지 자식 요소로 부착!
+    container.appendChild(img);
+
+    //무한으로 moveBg()호출
+    setInterval("moveBg()",10); //실행부가 하나 별도로 존재하여, moveBg를 호출
+}
+function joystick(){
+
+    //alert("나눌렀어?");
+    //우주선을 x축방향으로 증가 (우측 이동 효과)
+
+    //사용자가 키보드를 입력할때, 키보드의 각 영문철자 하나 하나 마다, 1:1 대응하는
+    //아스키 코드로 변환되어 컴퓨터에게 전달되어 지는데, 
+    //컴퓨터는 1,과 0만을 이해하기 때문에, 각 키보드의 영문철자를 
+    //이진수로 변환하기 위함이다
+    //개발자가 이 아스키 코드를 모두 암기해야 하는가? NO!!
+    //해결) 모든 프로그래밍 언어는 아스키코드를 반환하는 기능이 있다.
+    console.log("당신이 누른 철자의 매칭되는 아스키 코드는 ",event.keyCode);
+
+    if(event.keyCode==39){
+        x+=10; //지역변수에 10씩 누적!!
+        img.style.left = x + "px"; 
+}
+    //우주선을 x축방향으로 감소 (좌측 이동 효과)
+    if(event.keyCode==37){
+        x-=10; //지역변수에 10씩 누적!!
+        img.style.left = x + "px"; 
+    }
+    //우주선을 y축방향으로 감가 (위쪽 이동 효과)
+    if(event.keyCode==38){
+        y-=10; //지역변수에 10씩 누적!!
+        img.style.top= y+ "px"; 
+    }
+    //우주선을 y축방향으로 증가 (아래쪽 이동 효과)
+    if(event.keyCode==40){
+        y+=10; //지역변수에 10씩 누적!!
+        img.style.top= y+ "px"; 
+    }
+}
+
+//컴테이너의 배경이미지 좌표 변경
+function moveBg(){
+    //배경의 x좌표값을 프로그램이 끝날때까지 계속 음수방향으로 누적되어야 하므로
+    //전역으로 선언
+    bgX--; //bgX = bgX-1 
+    container.style.backgroundPosition=bgX+"px 0px"; //x축 y축
+
+    //moveBg(); // 속도를 늦추는 방법  재귀호출 (무한루프)
+    //setTimeout("moveBg()",10); //지정한 함수를 지정한 시간 뒤에 호출.
+                                            // 1/1000초 단위까지 표현 가능                                         
+}
+/*
+setInterval("moveBg()") 무한호출
+setTimeout() 1회 호출, 무한루프의 효과를 내려면? 재귀호출로 이용한다!
+*/
+</script>
+</head>
+<!-- 문서의 내용이 다 읽혀졌을때 호출되는 
+onLoad 이벤트 핸들러를 이용하는방법 
+문자열을 감싸는 기능을 갖는 특수문자에 역슬래시를 붙이면
+일반 문자가 된다 escape \" \" , ' '
+ onLoad='alert("키 \"눌렀어? \" ");init();'
+-->
+<body onLoad= 'init();' onkeydown="joystick()">
+    <div id="wrapper"></div>   
+</body>
+</html>
+<script>
+    //옵션) 스트립트 자체를 문서 제일 아래 두는 방법
+   //init(); //기존 함수 호출
+
+</script>
