@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>짝홀수판단</title>
+</head>
+<body>
+    <h1>여기에 팔단결과 나올 곳</h1>
+    
+    
+<script>
+/* 함수를 사용하지 않고 그냥 무조건 자바스크립트 코드를 수행할 경우
+스크립트 삽입 위치는 디자인이 다 읽혀진 
+완료 시점인 닫는 body 직전에 넣는게 유행이다 (bootstrap,편집기,구글맵,jqurery)*/
+
+var msg;    //짝수, 홀수 라는 문자열을 담게될 변수
+
+//프롬프트 창은 사용자가 입력한 데이터를 받아올 수 있다.
+var result= prompt("원하시는 수를 입력하세요"); //입력 메세지 창
+//alert("당신이 입력한 값은"+ result);
+
+//불량 유저가 숫자를 넣지 않고 숫자아닌 문자를 
+// 넣을 경우를 처리하려면?
+//isNaN(); // isNaN(데이터) is Not a Number : 즉 숫자가 아님을 true
+var ans=(isNaN(result))? "숫자가 아니잖아!!":"숫자입니다";
+alert(ans);
+
+//참이면 짝수, 거짓이면 홀수
+msg=(result%2==0)? "짝수":"홀수";
+document.querySelector("h1").innerText=msg+"입니다"; 
+</script>
+
+</body>
+</html>

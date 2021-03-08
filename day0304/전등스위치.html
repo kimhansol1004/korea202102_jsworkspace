@@ -17,6 +17,7 @@
         #wrapper img{
             width:35px;
             position: absolute;
+            float: left;
             left: 0px;
             top: 0px;
         }
@@ -29,8 +30,9 @@
     </style>
     <script>
         var op=0.8;
-        var flag=flag; //true or false 값을 대입할 변수 선언
-
+        var swImg="switch_on.png";
+        var flag=true;//true or false 값을 대입할 변수 선언
+                            // false 일때는 불끄는 효과, true일 때는 불켜는 효과
 
         //스위치를 켜고 끄는 함수
         function turn(){
@@ -39,11 +41,15 @@
             //op= 삼항연산자 한테 계산 부탁;
             op=(flag)?  0:0.8;
             document.querySelector("#surface").style.opacity=op;
-            flag=!flag; //기존 값을 뒤집자 뒤집으려면 논리값이 최고
 
             //스위치 이미지도 제어 (Hint : 이 코드 역시 두개지 이미지가 나오고 말고의 문제)
-            // ==흑백논리 따라서 삼항연산자 쓰면 좋을거 같다
-            
+            // ==흑백논리 따라서 삼항연산자 쓰면 좋을거 같다 
+            // 결론 : 이미지명은 결정되지 않은 변수로 가자!
+            // on 켜기, off 끄기
+            swImg=(flag)? "switch_on.png":"switch_off.png";
+            document.querySelector("img").src="../images/"+swImg;
+
+            flag=!flag; //기존 값을 뒤집자 뒤집으려면 논리값이 최고
         }
 
     </script>
@@ -52,6 +58,7 @@
     <div id="wrapper">
         <div id="surface"></div>
         <img src="../images/switch_off.png" alt="" onClick="turn()">
+        </div>
     </div>
 </body>
 </html>
