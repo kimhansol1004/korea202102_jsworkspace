@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>핑크빈</title>
+    <style>
+        #pb{
+            top:50px;
+            left: 0px;
+            position: relative;
+        }
+    </style>
+    <script>
+        var x=0;
+
+        function move1(){
+            document.querySelector ("#pb").style.left=x+"px";
+            document.querySelector("h1").innerText="x의 값:"+x;
+            x+=10;
+           
+        }
+        
+        function move2(){
+            document.querySelector("#move2").
+        }
+    </script>
+</head>
+<body>
+    <button onclick="move1()">수동</button>
+    <button onclick="move2()">자동</button>
+    <h1>x의 값:0</h1>
+    <img id=pb src="../images/pink_bean.png" width="100px" >
+</body>
+</html>

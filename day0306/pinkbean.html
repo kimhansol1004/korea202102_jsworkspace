@@ -1,0 +1,32 @@
+<html>
+    <head>
+        <script>
+            var x=0;
+            var goal=500;
+            var isLeft=true;
+            
+
+            function move(){
+                document.querySelector("img").style.left=x;
+   
+                x = ( isLeft ) ? ( x + 20 ): ( x - 20 ); 
+                isLeft = (x%500 === 0) ? !isLeft : isLeft;    
+
+                // console.log((x%500 === 0)? `x의 값은: ${x}`: `${x} % 500 = ${x%500}`);
+                console.log((x%500 === 0)? `x의 값은: ${x}`: `${x} % 500 = ${x%500}`);
+            }
+            
+        </script>
+    </head>
+    <body>
+        <div>
+            <button onclick="move()">수동</button>
+        </div>
+        <div>
+            <img 
+            src="../images/pink_bean.png"  
+            style= "left:0px; position:absolute"
+        >
+        </div>
+    </body>
+</html>
