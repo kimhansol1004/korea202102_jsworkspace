@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>switch문</title>
+    <script>
+    //body태그에 키보드 이벤트 핸들러 연결
+    window.addEventListener("load",function(){
+        //문서가 로드되고 나면, body요소에 키보드 이벤트를 연결해보자
+
+        //addEventListener의 호출 대상이 되는 익명함수에 변수를 정의하면
+        //이벤트 객체를 받을 수 있다 즉 event 객체를 직접 호출해도 되나, 익명함수로
+        //넘겨받아 사용할 수 도 있다.
+        //참고로, 익명함수에 선언된 e는 정해진 변수명이 아니라, 개발자가 임의로 아무거나
+        //주면 된다
+        document.body.addEventListener("keydown",function(e){ 
+            //console.log("e의 정체는?",e)
+            //위,아래,좌,우 에 해대 적절한 메세지를 출력해본다
+            //만일 if~조건으로 처리할 경우 적절한 if (if(단일), else if(다중), if~else(흑백논리))
+            /*
+            if(e.keyCode==37){
+                console.log("좌측");
+            }else if(e.keyCode==38){
+                console.log("위");
+            }else if(e.keyCode==39){
+                console.log("우측");
+            }else if(e.keyCode==40){
+                console.log("아래");
+            }else{
+                console.log("방향키만 누르세요 제발!");
+            }
+            */
+
+            /*else if문과 동일한 용도의 조건문이 지원되는데
+                switch~case문이다
+            */
+            switch(e.keyCode){
+                 /*여기서 조건이 만족하면 나머지 문장은 처다보지도 말라*/
+                case 37:console.log("좌");break;
+                case 38:console.log("상");break;
+                case 39:console.log("우");break;
+                case 40:console.log("하");break;
+                default:console.log("방향키만 누르세요")
+            }
+        });
+    });
+
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
+
+

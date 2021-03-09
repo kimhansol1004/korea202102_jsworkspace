@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이미지 도장 찍기</title>
+<style>
+    body{margin: 0px;}
+    .wrapper{
+        width: 700px;
+        height: 600px;
+        background-color: yellow;
+        overflow: hidden; /*자식이떠 있기 때문에*/
+    }
+    .menu{
+        width: 100px;
+        height: 100%;
+        background-color: dodgerblue;
+        float: left;
+    }
+    .content{
+        width: 600px;
+        height: 100%;
+        background: grey;
+        float: left;
+        position: relative;
+    }
+    .menu img{
+        width: 80px;
+        height: 70px;
+        border: 5px solid red;
+    }
+</style>
+<script>
+    var img_name=5; //도장 찍힐 이미지명
+    //content div에 마우스를 누를때마다, 이미지를 동적으로 부착한다
+    //단, 이미지가 붙을 위치는 마우스를 클릭한 좌표와 동일하게
+    function stamp(){
+        var img = document.createElement("img"); //메모리상에만 존재
+        img.src="../images/card/"+img_name+".png";
+        img.style.width=70+"px";
+        img.style.height=60+"px";
+        
+        //x,y좌표의 값을 마우스값과 일치시킨다
+        var x = event.clientX; //마우스 x좌표
+        var y = event.clientY;
+        img.style.position="absolute";
+        img.style.left=(x-35)+"px";
+        img.style.top=(y-43)+"px";
+
+        //content(화면)에 부착하자 
+        var content = document.querySelector(".content");
+        content.appendChild(img);
+    }
+
+</script>
+</head>
+<body>
+    <div class="wrapper">
+        <div class="content" onmouseup="stamp()"></div>
+        <div class="menu">
+            <img src="../images/card/1.png" onclick="img_name=1">
+            <img src="../images/card/2.png" onclick="img_name=2">
+            <img src="../images/card/3.png" onclick="img_name=3">
+            <img src="../images/card/4.png" onclick="img_name=4">
+            <img src="../images/card/5.png" onclick="img_name=5">
+        </div>
+    </div>
+</body>
+</html>
+
