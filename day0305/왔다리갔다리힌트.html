@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>왔다리 갔다리 힌트</title>
+<style>
+    #hero{
+        position: absolute; /*부모인 body를 기준으로 위치설정*/
+        left: 0px;
+        top: 200px;
+    }
+</style>
+<script>
+    var x=0; //우주선의 x좌표를 결정할 변수
+
+    function move(){
+        x+=10; //x는 기존x에 10을 더하시오 ==10씩 누적 표현식
+
+        //h1태그 안쪽에 좌표 텍스트 출력
+        document.querySelector("h1").innerText="x값:"+x;
+
+        //증가시킨 변수를 우주선의 좌표에도 써먹어보자
+         //문서내의 hero 요소의 스타일 중 left값을 변경시키자 
+         document.querySelector("#hero").style.left=x+"px";
+
+         //500에 도달했을때는 우주선의 좌표가 감소되어야한다
+         //또한 다시 0에 도달하면, 우주선의 좌표는 증가되어야한다  (x%500==0)
+         // 힌트 삼항연산자 + % 를 이용하자
+
+    }
+</script>
+</head>
+<body>
+
+    <button onClick="move()">수동으로 이동</button>
+    <h1>x값:0</h1>
+    
+    <img id="hero" src="../images/plane.png" width="50px">
+</body>
+</html>

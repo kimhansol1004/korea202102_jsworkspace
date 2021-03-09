@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>윤년판단</title>
+</head>
+<body>
+    <h1>윤달이 나오는 수 </h1>
+
+
+    <script>
+        var msg;
+        var result= prompt("윤년을 입력하세요");
+        msg=(result%4==0)? "홀수":"짝수";
+        document.querySelector("h1").innerText=msg+"입니다";
+    </script>
+</body>
+</html>

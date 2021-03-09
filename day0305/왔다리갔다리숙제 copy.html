@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>핑크빈 왔다리 갔다리</title>
+    <style>
+        #pb{
+            position:absolute;
+            left:0px;
+            top:500px;
+        }
+        #pb2{
+            position:absolute;
+            left:800px;
+            top:120px;
+        }
+        body {
+            /* background-image: url('../images/gym.jpg'); */
+            background-image: url('../images/maple_backgroud.jpg');
+            background-repeat: no-repeat;
+            /* width: 100%; /*body에 도달할때까지
+            height: 700px;
+            background-size: 100% 500px;
+            background-position: 0px 500px; */
+        }
+    </style>
+
+    <script>
+        var x=0;
+        var x2=0;
+        var isRight = false;     
+        var scope = 1000;
+        var unit = 10;
+        var speed = 20;
+
+        var isRight2 = false;
+        var scope2=200;
+
+        function changeUnit() {
+            //
+            var condition = (x % scope === 0) ? !isRight : isRight;
+            isRight = condition;
+        } 
+
+        function changeUnit2() {
+            //
+            var condition = (x % scope2 === 0) ? !isRight2 : isRight2;
+            isRight2 = condition;
+        } 
+
+        function moveCharacter() {
+            //
+            debugger;
+            changeUnit();
+            changeUnit2();
+            x2+=isRight2? unit : -unit;
+
+            x+=isRight ? unit : -unit;
+            document.querySelector("h1").innerText = "x값:" + x;
+            document.querySelector("#pb").style.left = x + "px";
+            document.querySelector("#pb2").style.left = 800+ x2 + "px";
+        }
+
+        function moveAutomatically() {
+            //
+            interval = setInterval("moveCharacter()", speed);
+        }
+
+    </script>
+</head>
+<body>
+    <div id="root">
+        <button onClick="moveCharacter()">수동이동</button>
+        <button onClick="moveAutomatically()">자동이동</button>
+        <h1>x값:0</h1>
+    
+        <img id="pb" src="../images/pink_bean.png" width="150px">
+        <img id="pb2" src="../images/pink_bean.png" width="150px">
+        <!-- <img id="pb" src="../images/onepunch.PNG" width="300px" height="400px"> -->
+    </div>
+</body>
+</html>
