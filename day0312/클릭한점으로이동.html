@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>클릭한점으로 이동</title>
+    <style>
+        body{margin:0px;}
+        .wrapper{
+            width: 100%;
+            height: 700px;
+            background-color:rgb(253, 211, 218);
+            border: 2px solid :hotpink;
+            position: relative; /*자식때문에*/
+        }
+        #pink{
+            width: 80px;
+        }
+    </style>
+    <script>
+        var pink; //다른 함수들에서 접근하기 위해
+        var targetX=0; //도달할 목표지점의 x좌표
+        var targetY=0; //도달할 목표지점의 y좌표
+        var a=0.1; //비율계수
+
+        function init(){
+            pink = document.getElementById("pink");
+            pink.style.position="absolute";
+            pink.style.left=100+"px";
+            pink.style.top=50+"px";
+        }
+        //핑크빈이 도달할 목표지검을 구한다
+        function getpos(){
+            targetX= event.clientX; //핑크빈의 목표 x 설정
+            targetY= event.clientY;  //핑크빈의 목표 Y 설정
+            console.log("x좌표=",targetX,"y좌표=",targetY);   
+        }
+        function move(){
+             //구해진 마우스 좌표를 이용하여, 핑크빈의 위치로 사용해본다
+             pink.style.left=parseFloat(pink.style.left)+a*(targetX-parseFloat(pink.style.left))+"px";
+             pink.style.top=parseFloat(pink.style.top)+a*(targetY-parseFloat(pink.style.top))+"px";
+        }
+        window.addEventListener("load",function(){
+            init();
+            setInterval("move()",10);
+        });
+    </script>
+</head>
+<body onMousemove="getpos()">
+    <div class="wrapper">
+        <img src="../images/pink_bean.png" id="pink">
+    </div>
+</body>
+</html>

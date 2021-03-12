@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>슈랙갤러리</title>
+<style>
+    .wrapper{
+        width: 500px;
+        height: 400px;
+        background-color: yellow;
+        margin: auto;
+        position: relative; /*자식이 containe 때문에 명시*/
+    }
+    /*사진이 보여줄 액자영역*/
+    #photo-frame{
+        width: 500px;
+        height: 340px;
+        background-color: orange;
+        overflow: hidden;
+        position: relative; /*자식이 containe 때문에 명시*/
+    }
+
+    #container{
+        width: 3500px;
+        height: 340px;
+    }
+    #container img{
+        float: left;
+    }
+
+    /*이미지 페이지 네이게이션*/
+    #navi{
+        text-align: center;
+        font-size: 30px;
+    }
+
+    #navi a{
+        text-decoration: none; /*링크 밑줄 없애기*/
+    }
+
+    /* pseudo : 수도 - 의역 : 가상태그(태그의 상태 마저도 선택자가 될수 있다)*/
+    #navi a:hover{
+       color :orange;
+    }
+</style>
+<script>
+    //포지션을 제어하기 위해, 문서 로드와 동시에 container에 absolute적용
+    var container; //모든 함수에서 접근하기 위해
+    var targetX=-3000; //컨테이너의 x좌표를 담을 변수
+    var a=0.1; //비율계수 (이숫자가 커질수록 걸음이 커진다 0.1~1 사이로 조절하기)
+
+    function init(){
+        container = document.getElementById("container");
+        container.style.position="absolute"; //부모를 기준으로 한 위치속성, 여기서 부모는 
+                                                            //photo-frame div이다
+        container.style.top=0+"px"; 
+        container.style.left=0+"px";  //초기화
+        setInterval("move(0)",10);
+    }
+
+    //container 이동시키기
+    function move(){ //0,-500
+        //container.style.left=targetX+"px"; //순간이동
+        //부드럽게==감속도
+        //나의위치는 = 현재나의 위치에서 +비율*(목표지점-현재나의위치)
+        container.style.left = parseFloat(container.style.left) + a*(targetX-parseFloat(container.style.left))+"px";
+        //setTimeout("move("+x+")",10); //클릭한 만큼 생성되 버린다
+    }
+    function setTarget(x){
+        targetX=x; //새로운 목표지점 생성
+    }
+    window.addEventListener("load" ,function(){
+        init();
+    });
+</script>
+</head>
+<body>
+    <div class="wrapper">
+        <div id="photo-frame">
+            <!-- 길다란 사지을 모아놓은 컨테이너!-->
+            <div id="container">
+                <img src="../images/shurek/img0.jpg">
+                <img src="../images/shurek/img1.jpg">
+                <img src="../images/shurek/img2.jpg">
+                <img src="../images/shurek/img3.jpg">
+                <img src="../images/shurek/img4.jpg">
+                <img src="../images/shurek/img5.jpg">
+                <img src="../images/shurek/img6.jpg">
+            </div>
+        </div>
+        <div id="navi">
+            <!--
+                 html문서에 자바스크립트를 작성할 수 있는 영역? 
+                1) script 태그안에 
+                2) 이벤트 핸들러 안에
+                3) a href 안에도 가능 (javascript : 명시)
+            -->
+            <a href="javascript:setTarget(0)">●</a>
+            <a href="javascript:setTarget(-500);">●</a>
+            <a href="javascript:setTarget(-1000);">●</a>
+            <a href="javascript:setTarget(-1500);">●</a>
+            <a href="javascript:setTarget(-2000);">●</a>
+            <a href="javascript:setTarget(-2500);">●</a>
+            <a href="javascript:setTarget(-3000);">●</a>
+        </div>
+    </div>
+</body>
+</html>
