@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>감속도운동</title>
+    <style>
+        #bean{
+            width: 100px;
+        }
+    </style>
+    <script>
+        //목표지점에 한걸음에 도착하면, 순간이동이 되므로, 자연스럽지 못하다
+        //더 부드러운 효과를 내려면, 감속도 처리 해야 하고, 이 감속도 처리는
+        //많은 분야의 에니메이션에서 이용하고있다
+        var targetX=500; //핑크빈이 도달할 목표지점의 x좌표
+        var a=0.1; //비율을 표현하는 비율계수
+        var bean;
+
+        //문서가 로드되면, 핑크빈의 스타일 포지션 값을 자바스크립트에서 지정
+        window.addEventListener("load",function(){
+            bean= document.getElementById("bean");
+            bean.style.position="absolute";
+            bean.style.left=0+"px";
+            bean.style.top=200+"px";
+
+            console.log("현재 핑크빈 x위치는",bean.style.left);
+
+        });
+
+        function move(){
+            //bean.style.left=targetX+"px"; //순간이동
+            //순간이동이 아닌 공식 : 물체위치 = 현재위치 + a*(목표지점  - 현재내위치)
+            bean.style.left = parseInt(bean.style.left)+a*(targetX - parseInt(bean.style.left))+"px";
+            setTimeout("move()",10);
+        }
+    </script>
+</head>
+<body>
+    <button onclick="move()">움직이기</button>
+    <img src="../images/pink_bean.png" id="bean" >
+</body>
+</html>
