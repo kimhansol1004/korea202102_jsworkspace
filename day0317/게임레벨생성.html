@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>게임 스테이지 동적 생성</title>
+<style>
+    #container{
+        width: 1000px;
+        height: 600px;
+        background-image: url(../images/maple_backgroud.jpg);
+        background-size: 1000px 600px;
+        margin: auto;
+        position: relative;
+    }
+</style>
+<script>
+    var container;
+    var map=[
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0],
+        [0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,0,0]
+    ];
+
+    function init(){
+        container = document.getElementById("container");
+        createBlock();
+    }
+
+    //게임에 등장할 블럭을 container div에 올려놓자!
+    function createBlock(){ 
+        for(var i=0; i<map.length;i++){ //층수
+            for(var a=0; a<map[i].length;a++){ //호수
+                if(map[i][a]==1){ //벽돌 생성
+                    var img = document.createElement("img");
+                    img.src="../images/block.png"
+                    img.style.width=40+"px";
+                    img.style.height=40+"px";
+                    img.style.position="absolute";
+                    img.style.left=(40*a)+"px"; //호수
+                    img.style.top=(40*i)+"px"; //층수
+
+                    //내가 원하는 위치에 1개이상 배치해보기
+                    container.appendChild(img);
+                }else if(map[i][a]==2){
+                    var img = document.createElement("img");
+                    img.src="../images/pink_bean.png"
+                    img.style.width=60+"px";
+                    img.style.height=60+"px";
+                    img.style.position="absolute";
+                    img.style.left=(60*a)+"px"; //호수
+                    img.style.top=(60*i)+"px"; //층수
+
+                      //내가 원하는 위치에 1개이상 배치해보기
+                    container.appendChild(img);
+                }
+            }
+        }
+    }
+    window.addEventListener("load",function(){
+        init();
+    });
+</script>
+</head>
+<body>
+    <div id="container"></div>
+</body>
+</html>
