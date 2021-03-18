@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>이미지카드</title>
+<style>
+    #wrapper{
+        width: 1020px;
+        height: 340px;
+        background-color: rgb(223, 220, 220);
+        margin: auto;
+        overflow: hidden;
+        text-align: center;
+    }
+</style>
+<script>
+var wrapper;
+var cardArray=[]; //생성된 카드를 담아둘 배열 (순서를 두면, 추후 반복문으로 처리도 가능하다)
+var a=0.1; //부드러운 정보 (0~1까지 로 갈수록 둔탁)
+var targetY=[]; //텍스트박스의 목표지점
+var imgArray=["2.png","3.png","7.png"]  //반복문에 써먹을려고 배열로 선언
+var msgArray=[
+    "춘식 & 라이언",
+    "같이 놀고",
+    "통조림"
+];
+
+function init(){
+    wrapper=document.getElementById("wrapper");
+
+    for(var i=0; i<3;i++){
+        targetY[i]=270; //3개의 targetY의 값을 270으로 설정
+        cardArray[i]=createCard(i, imgArray[i], msgArray[i]); //생성된 카드를 전역변수로 빼놓음
+        wrapper.appendChild(cardArray[i]);
+    }
+}
+
+//카드 한개를 생성하는 함수
+//  매개변수 index의 역할 - 0일때 targetY[0], 1일때 targetY[1], 2일때 targetY[2],   
+function createCard(index,src,msg){
+    console.log("createCard호출시 넘겨받은 인덱스는",index);
+
+    var card = document.createElement("div"); //이미지를 배경으로 안고있는 바깥쪽 카드
+    card.style.width=330+"px";
+    card.style.height=320+"px";
+    card.style.backgroundImage="url(../images/toy2/"+src+")";
+    card.style.backgroundSize="cover";   
+    card.style.position="relative"; //자식때문에
+    card.style.overflow="hidden";
+    card.style.float="left";
+    card.style.margin=5+"px";
+    card.style.boxSizing="border-box";
+
+    //텍스트 박스
+    var textBox = document.createElement("div");
+    textBox.style.width=330+"px";
+    textBox.style.height=320+"px";
+    textBox.style.backgroundColor="rgb(151, 150, 150)";
+    textBox.style.opacity=0.8; //0이 불투명~1이불투명
+    textBox.style.position="absolute";
+    textBox.style.top=250+"px";
+    textBox.innerText=msg;
+    textBox.style.color="white";
+    textBox.style.fontSize=20+"px";
+    textBox.style.textAlign="center";
+    textBox.style.boxSizing="border-box";
+    textBox.style.paddingTop=22+"px";
+
+    //마우스 오버 이벤트 구현
+    textBox.addEventListener("mouseover",function(){
+        //top좌표를 0으로 올라가보자! (부드러운 움직이는 나중에 구현)
+        targetY[index]=0;
+        console.log("내가 사용하 인덱스는",index);
+    });
+    textBox.addEventListener("mouseout",function(){
+        targetY[index]=270;
+    });
+
+
+    //조립 (텍스트박스를 카드에 넣자)
+    card.appendChild(textBox);
+
+    return card;
+}
+
+//부드럽게 오르 내리는 감속도
+function slideUpDown(){
+    //물체위치 = 기존 물체위치 + a*(목표지점 - 기존물체위치)
+    for(var i=0; i<cardArray.length;i++){ //3개의 카드 각자마자 움직임 적용
+        var textBox= cardArray[i].children[0]; //textBox라는 안쪽 div를 지칭해야함
+        //console.log("움직일 대상 div는",textBox);
+        textBox.style.top=parseFloat(textBox.style.top) + a*(targetY[i] - parseFloat(textBox.style.top))+"px";
+    }
+}
+
+window.addEventListener("load",function(){
+    init();
+    setInterval("slideUpDown()",10);
+});
+
+</script>
+</head>
+<body>
+    <div id="wrapper"></div>
+</body>
+</html>
