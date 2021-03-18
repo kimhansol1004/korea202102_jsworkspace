@@ -100,12 +100,12 @@ setTimeout() 1회 호출, 무한루프의 효과를 내려면? 재귀호출로 �
 */
 </script>
 </head>
-<!-- 문서의 내용이 다 읽혀졌을때 호출되는 
-onLoad 이벤트 핸들러를 이용하는방법 
-문자열을 감싸는 기능을 갖는 특수문자에 역슬래시를 붙이면
-일반 문자가 된다 escape \" \" , ' '
- onLoad='alert("키 \"눌렀어? \" ");init();'
--->
+    <!-- 문서의 내용이 다 읽혀졌을때 호출되는 
+    onLoad 이벤트 핸들러를 이용하는방법 
+    문자열을 감싸는 기능을 갖는 특수문자에 역슬래시를 붙이면
+    일반 문자가 된다 escape \" \" , ' '
+    onLoad='alert("키 \"눌렀어? \" ");init();'-->
+    
 <body onLoad= 'init();' onkeydown="joystick()">
     <div id="wrapper"></div>   
 </body>

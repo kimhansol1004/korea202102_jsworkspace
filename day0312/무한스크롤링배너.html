@@ -26,13 +26,14 @@
     function init(){
         bannerFrame = document.getElementById("banner-frame");
         createProduct();
+        var x=3;
     }
 
     function createProduct(){
         //액자 안에 제품 이미지 8개를 동적으로 생성하여 위치시켜본다
         for(var i=1;i<=8;i++){
             var img=document.createElement("img"); //<img>
-            img.src="../images/toy/"+i+".png"; //<img src=""> 와 동일
+            img.src="../images/toy2/"+i+".png"; //<img src=""> 와 동일
             img.style.width=100+"px";
             img.style.left=100+"px";
             img.style.position="absolute"; 
