@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>회원관리</title>
+<style>
+.wrapper{
+    width: 1000px;
+    height: 600px;
+    background-color: rgb(253, 222, 222);
+    margin: auto;
+    overflow: hidden;
+}
+#regist-area, #detail-area{
+    width: 150px;
+    height: 100%;
+    background-color: rgb(255, 202, 202);
+    float: left;
+}
+#regist-area input, #detail-area input{
+    width: 90%;
+    font-size: 18px;
+    border-radius: 5%;
+    background-color: rgb(252, 154, 154);
+    color:white;
+    border: 1px solid #ffffff;
+}
+#list-wrapper{
+    width: 700px;
+    height: 100%;
+    float: left;
+}
+</style>
+<script src="../js/font.js"></script>
+<script>
+var listArea; //2  //테이블이 출력될 div영역
+var t_id, t_name, t_phone, t_money; //4-6
+var t_id2, t_name2, t_phone2, t_money2; //6-6
+var memberArray=[]; //5-1 //지금은 일차원이지만, 곧 등록시 2차원이 될 예정
+                                //2차원 배열은 표이고 동시에 데이터베이스로 간주해도 좋다
+                                //단 메모리상에서만
+
+//등록하기 
+function regist(){ //1
+    //등록전에 특히 숫자형 데이터에 대해서는 유효성 체크를 꼭 해두자
+    if(isNaN(t_money.value)){ //6-2 //참이면 숫사작 아닌것이다 
+        alert("자산은 숫자만 가능합니다.");
+        t_money.value=""; //사용자가 입력한 것 초기화
+        t_money.focus();
+        return; //함수 호출한 곳으로 되돌아가!!
+    }
+
+    //등록버튼에 의해 존재할 수 있는 회원은 1명이므로, 
+    //1명의 데이터는 1차원배열에 담으면 된다
+    var member =[];  //5 //비여잇는 배열 선언
+    member[0]=t_id.value;   //4-7   //ID예정; 
+    member[1]=t_name.value;     //Name예정;
+    member[2]=t_phone.value;    //Phone예정;
+    member[3]=t_money.value;    //Month예정;
+    //한 사람의 정보가 메모리에 올라옴
+    //console.log("지금 등록된 회원은",member);
+    //이차원 배열 용도로 선언한 memberArray에 추가하자
+    memberArray.push(member);   //5-1
+    console.log("총 누적 회원수", memberArray.length); //5-2
+
+    getList(); //5-3 //등록된 데이터를 표로 보여주기 위해 즉 시각화 시키기 위해 getList()호출
+}
+
+//테이블를 테이블로 출력하기
+function getList(){  //4-4
+    var tag="<table width=\"100%\" border=\"1\">";
+    tag+="<tr style=\"background:pink\">";
+    tag+="<td>No</td>";
+    tag+="<td>ID</td>";
+    tag+="<td>Name</td>";
+    tag+="<td>Phone</td>";
+    tag+="<td>Money</td>";
+    tag+="</tr>";
+
+    var sum=0;  //6-2
+
+    //db에 있는 데이터를 이용하여 현재까지 누적된 회원의 정보를 출력하기
+    for(var i=memberArray.length-1; i>=0;i--){ //4-5   //5-4 층수만큼 반복 //5-6
+        tag+="<tr>";
+        tag+="<td>"+(i+1)+"</td>";  //5-7 +1해서 복원  //얘는 배열에 넣은 적이 없으므로, 반복문에서 처리 불가
+        for(var a=0; a<memberArray[i].length;a++){ //5-5 //a는 지역변수
+        tag+="<td>"+memberArray[i][a]+"</td>";  
+        }
+        //호수가 3인 데이터는 money이므로, 이 money를 sum변수에 누적시키자
+        sum = sum + parseInt(memberArray[i][3]);  //6-3 //돈을 누적하는 횟수는 층과 관련
+                                                                        //그래서 바깥쪽 포문에서  처리
+        tag+="</tr>";
+    }
+    tag+="<tr>"; //6 통계용 tr
+    tag+="<td colspan='5' align='right'>가입 회원 수:"+memberArray.length+"명 , 누적 자산:"+sum+"원 </td>"; //6-1  //6-4
+    tag+="<tr>";
+    tag+="</table>";
+
+    //document.write()와 비슷하기는 하지만, document.write()는
+    //문서 전체에 지정한 문자열을 출력한다
+    listArea.innerHTML= tag ;
+}
+function init(){ //3
+    listArea = document.getElementById("list-area"); //4-2
+    //등록용 텍스트 필드들
+    t_id = document.getElementById("t_id");  //4-6
+    t_name = document.getElementById("t_name");
+    t_phone = document.getElementById("t_phone");
+    t_money = document.getElementById("t_money");
+
+    //상세보기용 텍스트 필드들
+    t_id2 = document.getElementById("t_id2"); //6-5
+    t_name2 = document.getElementById("t_name2");
+    t_phone2 = document.getElementById("t_phone2");
+    t_money2 = document.getElementById("t_money2");
+
+    getList() //4-3
+}
+
+window.addEventListener("load",function(){ //4
+    init(); //4-1
+})
+</script>
+</head>
+<body>
+    <div class="wrapper">
+        <div id="regist-area">
+            <input type="text" id="t_id" placeholder="ID 입력">                
+            <input type="text" id="t_name" placeholder="이름 입력">                
+            <input type="text" id="t_phone" placeholder="연락처 입력">                
+            <input type="text" id="t_money" placeholder="현금자산">      
+
+            <button onClick="regist()">등록</button>          
+        </div>
+        <div id="list-wrapper">
+            <div id="search-area">
+                <select>
+                    <option value="">ID로 검색</option>                        
+                    <option value="">이름으로 검색</option>                        
+                </select>                    
+                <input type="text" placeholder="검색어 입력">       
+                <button style='font-size:18px'>
+                    Search <i class='fas fa-search'></i>
+                </button>
+            </div>
+            <div id="list-area"></div>
+        </div>
+        <div id="detail-area"> 
+            <input type="text" id="t_id2" placeholder="ID 입력">                
+            <input type="text" id="t_name2" placeholder="이름 입력">                
+            <input type="text" id="t_phone2" placeholder="연락처 입력">                
+            <input type="text" id="t_money2" placeholder="현금자산">  
+            <button>수정</button>    
+            <button>삭제</button>                   
+    </div>    
+</body>
+</html>
