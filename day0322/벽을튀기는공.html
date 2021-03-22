@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>벽을튀기는공</title>
+
+<script src="./Ball.js"></script>
+<script>
+var wrapper;
+
+function init(){  //초기화 함수
+    //
+    createWall();
+}
+
+//공을 가두어놓을 벽
+function createWall(){
+    //
+    wrapper = document.createElement("div");
+    wrapper.style.width = 800 + "px";
+    wrapper.style.height = 700 + "px";
+    wrapper.style.margin = "auto";
+    wrapper.style.border = 5 + "px solid red";
+    wrapper.style.position = "relative"; //자식인 공 때문에
+    document.body.appendChild(wrapper);
+}
+
+function createBall(){
+    var ball = new Ball(wrapper); //생성되는 공은 wrapper에 부착됨!
+}
+
+//키보드의 스페이스바를 누르면, 볼을 생성해보자
+function space(){   
+    //
+    //alert(event.keyCode);
+    if(event.keyCode==32){ //space bar의 아스키코드
+        createBall();
+    } 
+}
+
+window.addEventListener("load",function(){
+    //
+    init();
+});
+</script>
+</head>
+<body onkeydown="space()">
+</body>
+</html>

@@ -1,0 +1,25 @@
+<script>
+class pica{
+    /*클래스란 변수와 함수를 하나의 단위 묶을 수 있는 코드단위*/
+
+    //속성은 변수로 표현
+    constructor(x, y){
+        //
+        this.x = x;
+        this.y = y;
+
+        this.img = document.createElement("img");
+        this.img.src="../images/pica.png";
+        this.img.style.position="absolute";
+        this.img.style.left=this.x+"px";
+        this.img.style.top=this.y+"px";
+        this.img.style.width=100+"px";
+        //body에 부착
+        document.body.appendChild(this.img);
+    }
+
+    //동작은 함수로 표현
+
+}
+
+</script>

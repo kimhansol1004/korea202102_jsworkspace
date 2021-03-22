@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>화살날리기</title>
+<script src="../js/lib.js"></script>
+<script>
+var arrow=[]; 
+var colorArray=["red","orange","yellow","green","blue","navy","purple"];
+var textArray=["♭","♩","♪","♬","◆","☆","★","◐","◑","○","●","◎","⊙","◈","◇","△","▲","▽","▼","□","■","◁","◀","▷","▶","◇","◆","♤","♠","♡","♥","♧","♣"];
+
+
+//1회성이 아닌, 추후 두고 두고 써먹을 코드 영역을 지정한 후, 거푸집으로 선언하자
+//전산에서는 이 코드 단위를 클래스라 한다
+//2015년부터 ECMAScript (javascript 명칭) 에서는 class지원하기 시작함
+//클래스명은 자바, C# 등에서 첫 철자를 대문자로 작성함 (약속)
+
+class Arrow{  //화살 자체가 아니라, 장차 화살을 만들어 낼 틀 즉 물건 자체가 아니다
+    //
+    //자바스크립트에서는 사물이 보유한 변수는 constructor()라는 함수 즉 생성자 함수내에
+    //작성해야 하는 규칙이 있다
+
+    constructor(y, color,velX,text){ //사물 중심으로 바뀜
+        //
+        this.span;
+        this.velX=velX; //x좌표의 속도
+        this.x=0; //y좌표
+        this.y=y; 
+        this.color=color;
+        this.text=text;
+    }
+   
+    //사물이 보유한 함수를 가리켜, 그 사물의 동작방식을, 방법을 표현한다고 하여 메서드
+    //method라 한다!
+    init(){
+        //
+        this.span = document.createElement("span");
+        this.span.style.position = "absolute";
+        this.span.style.left = 0 +"px";
+        this.span.style.top = this.y +"px";
+        this.span.innerText = this.text;
+        this.span.style.fontSize = 30 + "px";
+        this.span.style.color = this.color; //색상 적용
+
+        document.body.appendChild(this.span); //body에 부착
+    }
+
+    move(){
+        //
+        this.x = this.x + this.velX; //x = x+10 즉 10씩 누적
+        this.span.style.left = this.x + "px";
+    }
+}
+
+//화살을 날릴 수 있는 함수
+function auto(){
+    for(var i=0; i<arrow.length; i++){ //화살의 배열수 만큼
+        arrow[i].move();
+    }
+}
+
+window.addEventListener("load",function(){
+    //
+    //원하는 만큼 커푸집으로부터 화살을 생성해보자 즉 쇳물 붓기
+    for(var i=0;i<100;i++){
+        //constructor()생성자 함수의 매개변수에 y값 전달
+        arrow[i]=new Arrow(i*10, colorArray[getRandom(colorArray.length)], getRandom(20)+1,  textArray[ getRandom(textArray.length)] ); 
+        arrow[i].init();   
+    }
+
+    setInterval("auto()",100);
+});
+</script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>회원관리 프로그램</title>
+<style>
+.wrapper{
+    width:1000px;
+    height:600px;
+    background: rgb(253, 222, 222);
+    margin: auto;
+    overflow: hidden;
+} 
+
+#regist-area, #detail-area{
+    width:150px;
+    height:100%;
+    background: rgb(255, 202, 202);
+    float:left;
+} 
+#regist-area input, #detail-area input{
+    width:90%;
+    font-size:18px;
+    border-radius: 5%;
+    background-color:rgb(252, 154, 154);
+    color:white;
+    border:1px solid #ffffff;
+}
+#list-wrapper{
+    width:700px;
+    height:100%;
+    float:left;
+}  
+</style>
+<script src="../js/font.js"></script>
+<script>
+var listArea; //테이블이 출력될 div영역
+var t_id, t_name, t_phone, t_money;
+var t_id2, t_name2, t_phone2, t_money2;
+
+var memberArray=[
+    ["batman","배트맨","010",3000],
+    ["superman","수퍼맨","011",5000],
+    ["xmen","엑스맨","070",6000],
+    ["spiderman","스파이더맨","018",9000]
+]; //지금은 일차원이지만, 곧 등록시 2차원이 될 예정 
+//2차원배열은 표이고, 동시에 데이터베이스로 간주해도 좋다!!
+//단, 메모리상에서만...
+
+var index=-1; //현재 보고있는 회원의 담기 위한 변수
+
+//등록하기
+function regist(){
+    //
+    //등록전에 특히 숫자형 데이터에 대해서는 유효성 체크를 꼭 해두자!!
+    if(isNaN(t_money.value)){//참이면 숫자가 아닌것임
+        alert("자산은 숫자만 가능합니다.");
+        t_money.value="";//사용자가 입력한 것 초기화
+        t_money.focus();
+        return;//함수 호출한 곳으로 되돌아가!!!!!
+    }
+
+    //등록버튼에 의해 존재할 수 잇는 회원은 1명이므로, 
+    //1명의 데이터는 1차원배열에 담으면 된다!!
+    var member=[]; //비어있는 배열 선언 
+    member[0]=t_id.value;       //ID예정;
+    member[1]=t_name.value; //Name예정;
+    member[2]=t_phone.value;//Phone예정;
+    member[3]=t_money.value //Money예정;
+    //한 사람의 정보가 메모리에 올라옴!!
+    //console.log("지금 등록된 회원은 ", member);
+    //이차원 배열 용도로 선언한 memberArray에 추가하자!!!
+    memberArray.push(member);
+    console.log("총 누적 회원수 ", memberArray.length);
+
+    getList(); //등록된 데이터를 표로 보여주기 위해 즉 시각화 시키기 위해 getList() 호출
+
+}   
+
+//데이터를 테이블로 출력하기
+function getList(){
+    //
+    var tag="<table width=\"100%\" border=\"1\">";
+    tag+="<tr style=\"background:pink\">";    
+    tag+="<td>No</td>";
+    tag+="<td>ID</td>";
+    tag+="<td>Name</td>";
+    tag+="<td>Phone</td>";
+    tag+="<td>Money</td>";                
+    tag+="</tr>";    
+
+    var sum=0;
+
+    //db에 있는 데이터를 이용하여 현재까지 누적된 회원의 정보를 출력하기!!
+    for(var i=memberArray.length-1;i>=0;i--){ //층수만큼 반복   
+        var id=memberArray[i][0]; //id
+        var name=memberArray[i][1]; //name
+        var phone=memberArray[i][2]; //phone
+        var money=memberArray[i][3]; //money
+
+        /*tag+="<tr onClick=\"getDetail('"+id+"' , '"+name+"', '"+phone+"', "+money+")\">"; */
+        tag+="<tr onClick=\"getDetail2("+i+", '"+memberArray[i]+"')\">";  
+        tag+="<td>"+(i+1)+"</td>"; //얘는 배열에 넣은 적이 없으므로, 반복문에서 처리 불가
+        for(var a=0;a<memberArray[i].length;a++){            
+            tag+="<td>"+memberArray[i][a]+"</td>";
+        }
+        //호수가 3인 데이터는 money이므로, 이 money를 sum변수에 누적시키자
+        sum = sum+ parseInt(memberArray[i][3]);//돈을 누적하는 횟수는 층과 관련...
+                                                                    //그래서 바깥쪽 포문에서 처리했다
+        tag+="</tr>";    
+    }
+    tag+="<tr>";
+    tag+="<td colspan='5' align='right'>가입 회원 수:"+memberArray.length+"명 , 누적 자산: "+sum+"원 </td>";
+    tag+="<tr>";    
+    tag+="</table>";
+
+    //document.write()와 비슷하기는 하지만, documenet.write()는
+    //문서 전체에 지정한 문자열을 출력한다...    
+    listArea.innerHTML=tag;
+
+}
+
+function init(){
+    //
+    listArea = document.getElementById("list-area");
+    //등록용 텍스트 필드들.
+    t_id = document.getElementById("t_id");
+    t_name = document.getElementById("t_name");
+    t_phone = document.getElementById("t_phone");
+    t_money = document.getElementById("t_money");
+
+    //상세보기용 텍스트 필드들
+    t_id2 = document.getElementById("t_id2");
+    t_name2 = document.getElementById("t_name2");
+    t_phone2 = document.getElementById("t_phone2");
+    t_money2 = document.getElementById("t_money2");
+
+    getList();
+}
+
+function searchMember(){
+    //
+    //일단 사용자가 선택한 검색 카테고리와 검색어를 구해보자!!
+    var category = document.getElementById("category");//검색구분
+    var keyword = document.getElementById("keyword");//검색어
+    //console.log("검색구분은 ", category.value, "검색어는 ", keyword.value);
+    var searchArray=[]; //모든 회원이 아닌, 검색된 회원만 담아놓을 배열 
+
+    for(var i=0;i<memberArray.length;i++){    //배열안의 모든 요소를 대상으로 검색
+        var member=memberArray[i];//일차원 배열 하나를 끄집어 낸다!!     
+        //선택한 카테고리의 값이 검색어와 같다면.. 검색하여 일치된 데이터 발견!!!
+        if(member[category.value]==keyword.value){
+            console.log(i+" 번째 층에서 일치되는 데이터를 발견했어요!!");
+            searchArray.push(member);
+        }
+    }
+    console.log("검색결과 발견된 레코드 수는 ", searchArray.length);
+    memberArray = searchArray; //원래 사용하고 있던 목록을 검색결과 배열로 대체
+    getList(); //화면갱신
+}
+
+//화원 1명에 대한 정보 출력 (상세보기) - 방법 1 :  각 데이터 마다 매칭되는 매개변수를
+//사용하는 방법
+function getDetail(id,name,phone,money){
+    //
+    t_id2.value=id;
+    t_name2.value=name;
+    t_phone2.value=phone;
+    t_money2.value=money;
+}
+
+//매개변수를 4개 쓰지 말고, 1차원 배열을 통째로 넘겨받아 보자
+//n : memberArray배열에서의 n번째에 위치한 회원
+function getDetail2(n, arr){
+    //
+    index=n;
+    var member = arr.split(","); //쉼표를 구분으로, 문자열 분리 결과는 문자열 배열이 반환된다
+    console.log("넘겨받은 문자열을 배열로 복원하니..",member);
+    //화면에 출력
+    t_id2.value=member[0];
+    t_name2.value=member[1];
+    t_phone2.value=member[2];
+    t_money2.value=member[3];
+}
+
+function del(){
+    //
+    //배열의 삭제 splice
+    if(confirm("삭제하시겠습니까?")){
+        //memberArray 2차원배열중, 현재 보고있는회원배열만 삭제
+        memberArray.splice(index,1); //배열에서 한 요소 삭제 즉 한명의 회원삭제
+        getList(); //화면갱신
+    }
+}
+
+function edit(){
+    //
+    if(confirm(t_id2.value+"의 정보를 수정하시겠습니까?")){
+        //memberArray의 회원중 현재 봅고있는 회원의 index를 이용하여,요소를 접근한후
+        //1차원배열인 회원정보를 수정
+        memberArray[index][0]=t_id2.value; //아이디
+        memberArray[index][1]=t_name2.value; //이름
+        memberArray[index][2]=t_phone2.value; //연락처
+        memberArray[index][3]=t_money2.value; //자금
+
+        //목록 갱신
+        getList();
+    }
+}
+window.addEventListener("load", function(){
+    init();
+});
+</script>
+</head>
+<body>
+    <div class="wrapper">
+        <div id="regist-area">
+            <input type="text" id="t_id" placeholder="ID 입력">                
+            <input type="text" id="t_name" placeholder="이름 입력">                
+            <input type="text" id="t_phone" placeholder="연락처 입력">                
+            <input type="text" id="t_money" placeholder="현금자산">      
+
+            <button onClick="regist()">등록</button>          
+        </div>
+        <div id="list-wrapper">
+            <div id="search-area">
+                <select id="category">
+                    <option value="">검색 선택▼</option>
+                    <option value="0">ID로 검색</option>                        
+                    <option value="1">이름으로 검색</option>                        
+                </select>                    
+                <input type="text" id="keyword" placeholder="검색어 입력">
+                <button style='font-size:18px' onClick="searchMember()">
+                    Search <i class='fas fa-search'></i>
+                </button>
+            </div>
+            <div id="list-area"></div>
+        </div>
+        <div id="detail-area">
+            <input type="text" id="t_id2" placeholder="ID 입력">                
+            <input type="text" id="t_name2" placeholder="이름 입력">                
+            <input type="text" id="t_phone2" placeholder="연락처 입력">                
+            <input type="text" id="t_money2" placeholder="현금자산">   
+            <button onclick="edit()">수정</button>   
+            <button onclick="del()">삭제</button>   
+        </div>
+    </div>    
+</body>
+</html>
