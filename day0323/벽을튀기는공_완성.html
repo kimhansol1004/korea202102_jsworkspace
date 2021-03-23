@@ -7,8 +7,12 @@
 <title>벽을튀기는공</title>
 
 <script src="../js/Ball.js"></script>
+<script src="../js/lib.js"></script> 
 <script>
 var wrapper;
+var ballArray=["heart.png","heart2.png","hearta.png","heartda.png",
+"heartf.png","heartl.png","heartq.png","hearts.png","heartt.png","heartw.png"];
+var balls=[]; //볼 여러개를 가리킬 수 있는 전역 배열
 
 function init(){  //초기화 함수
     //
@@ -25,10 +29,19 @@ function createWall(){
     wrapper.style.border = 5 + "px solid red";
     wrapper.style.position = "relative"; //자식인 공 때문에
     document.body.appendChild(wrapper);
+    
 }
 
-function createBall(){
-    var ball = new Ball(wrapper); //생성되는 공은 wrapper에 부착됨!
+function createBall(){ 
+    //
+    var velX = getRandom(10) + 1;  //1 ~ 10 
+    var velY = getRandom(10) + 1;  //1 ~ 10
+
+    var ball = new Ball(wrapper
+    ,"../images/heart/"+ballArray[getRandom(ballArray.length)]
+    ,50,50, velX, velY);  //생성되는 공은 wrapper에 부착됨!
+
+    balls.push(ball); //볼을 담아놓을 배열에 방금 태어난 볼을 추가
 }
 
 //키보드의 스페이스바를 누르면, 볼을 생성해보자
@@ -39,10 +52,20 @@ function space(){
         createBall();
     } 
 }
+function gameLoop(){
+    //
+   //배열에 들어있는 만큼만 돌려야 햔다 따라서 배열에 아무것도 안돈다
+   //즉 undefined 조건 조차 필요 없다
+
+   for(var i=0; i<balls.length; i++){
+    balls[i].move(); //배열에 들어있는 공들을 하나씩 끄집어 내자
+    }
+}
 
 window.addEventListener("load",function(){
     //
     init();
+    setInterval("gameLoop()",10);
 });
 </script>
 </head>
