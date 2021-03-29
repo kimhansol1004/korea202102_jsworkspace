@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Json갤러리</title>
+<style>
+#wrapper{
+    width: 1000px;
+    height: 800px;
+    background: rgb(252, 252, 205);
+    margin: auto;
+}
+#movie_title{
+    width: 100%;
+    height: 100px;
+    background: rgb(248, 211, 211);
+}
+#content_wrapper{
+    width: 100%;
+    height: 550px;
+    background: rgb(241, 220, 191);
+    overflow: hidden;
+}
+#pic{
+    width: 500px;
+    height: 100%;
+    background: rgb(203, 245, 247);
+    float: left;
+}
+#detail{
+    width: 500px;
+    height: 100%;
+    background: rgb(204, 203, 247);
+    float: left;
+    font-size:32px;
+    color:#ffffff;
+}
+#navi{
+    width: 100%;
+    height: 50px;
+    background: rgb(241, 161, 221);
+}
+#thumb{
+    width: 100%;
+    height: 100px;
+    background: rgb(250, 193, 147);
+    position: relative; /*자식 썸네일 떄문에*/
+}
+</style>
+
+<script src="../js/marvel.js"></script>
+<script>
+var box;
+
+function init(){
+    createBox(); //박스 먼저 만들고 
+    createThumb();//이미지 부착!!
+    getDetail(movies.marvel[0]);
+};
+
+function createBox(){
+    box = document.getElementById("box");//이미지들을 통째로 이동시킬 박스
+    box.style.position="absolute";
+    box.style.left=0+"px";
+    box.style.top=0+"px";
+    box.style.width=(100*20)+"px";
+    box.style.height=100+"px";
+    box.style.backgroundColor="blue";
+}
+
+//썸네일 만들기 
+function createThumb(){
+    for(var i=0;i<movies.marvel.length;i++){
+        var movie=movies.marvel[i]; //영화 한편 추출!!
+
+        var img=document.createElement("img");    
+        img.src=movie.url;
+        img.style.width=90+"px";
+        img.style.height=90+"px";
+        img.style.position="absolute";
+        img.style.left=5+(100*i)+"px";
+        img.style.top=5+"px";
+        box.appendChild(img); //썸네일 영역에 이미지 부착
+    }
+};
+
+//영화 1건에 대한 상세내용 보기 (매개변수로 영화1편을 넘겨받자!!)
+function getDetail(obj){
+    console.log("처음에 보여질 영화 정보객체", obj);
+
+    //큰 사진 보여주기 
+    var pic =document.getElementById("pic");
+    pic.style.backgroundImage="url("+obj.url+")";
+    pic.style.backgroundSize=500+"px "+550+"px";
+
+    //상세 내용출력 
+    var msg="";
+    msg+="제목:"+obj.title+"<br>";
+    msg+="부제목:"+obj.phase+"<br>";
+    msg+="개봉년도:"+obj.release_year+"<br>";
+    msg+="상영시간:"+obj.running_time+"<br>";
+    msg+="제작예산:"+obj.budget+"달러 <br>";
+    msg+="영화수익:"+obj.gross+"달러 <br>";
+    document.getElementById("detail").innerHTML=msg;
+}
+
+window.addEventListener("load" , function(){
+    init();
+}); 
+</script>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="movie_title">영화 제목 나올곳</div>
+        <div id="content_wrapper">
+            <div id="pic">사진 나올곳</div>
+            <div id="detail">영화설명 나올곳</div>
+        </div>
+        <div id="navi">네비게이션 버튼 영역</div>
+        <div id="thumb">
+            <div id="box"></div>
+        </div>
+    </div>    
+</body>
+</html>

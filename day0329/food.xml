@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- xml은 html과 형제이다
+단 차이점
+HTML : 문서에 어떻게 쵸현될지에 주력 (how to design)
+            html은 w3c에서 지정한 표준만 사용가능다하다, 즉 이미 태그가 정해져 있다
+XML : 문서에 데이터를 어떻게 구성할지(how to consust data)
+         xml은 사용자(개발자)가 태그를 정의할 수 있다 사용자 정의 태그
+-->
+<foodList>
+    <food>
+        <name>돈까스</name>
+        <price>8000</price>
+    </food>
+    <food>
+        <name>짬뽕</name>
+        <price>7500</price>
+    </food>
+</foodList>
