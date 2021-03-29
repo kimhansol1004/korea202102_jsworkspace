@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>충동체크</title>
+<style>
+*{margin: 0px;}
+</style>
+<script>
+//전산에서 모든 그래픽은 사각형으로 표현된다 (사각형을 벗어나지 않는다)
+//이 예제에서는 사각형들간, 충돌여부를 체크하는 로직을 작성해보자
+var box1;
+var box2;
+var flag=false;
+
+function init(){
+    box1 = document.getElementById("box1");
+    box2 = document.getElementById("box2");
+
+    //스타일 적용
+    box1.style.position = "absolute";
+    box1.style.left = 100 + "px";
+    box1.style.top = 200 + "px";
+    box1.style.background = "green";
+    box1.style.width = 100 + "px";
+    box1.style.height = 100 + "px";
+    box1.style.color = "#ffff";
+
+    box2.style.position = "absolute";
+    box2.style.left = 600 + "px";
+    box2.style.top = 200 + "px";
+    box2.style.background = "blue";
+    box2.style.width = 100 + "px";
+    box2.style.height = 100 + "px";
+    box2.style.color = "#ffffff";
+
+    log(box1, 100, 200);
+    log(box2, 600, 200);
+}
+
+function drag(){
+    //
+    if(flag){
+        box1.style.left =  (event.clientX-50)+ "px";
+        box1.style.top =  (event.clientY-50)+ "px";
+
+        //초록이의 좌쵸 실시간 출력
+        log(box1, parseInt(box1.style.left), parseInt(box1.style.top));
+        collisionCheck(box1, box2);
+    } 
+}
+
+//두 물체간, 충돌여부를 판단해주는 함수
+//두 물체간 충돌은 사격형간 충돌여부를 판단해야 한다
+function collisionCheck(me, you){
+    //
+    //왼쪽 상단만 체크 (내일 나머지 3개면에 대해서도 마무리)
+    var result = false; //
+
+    var x1 = parseInt(me.style.left); //
+    var y1 = parseInt(me.style.top)//
+    var w1 = parseInt(me.style.width); //
+    var h1 = parseInt(me.style.height); ///
+
+    //타겟이 되는 사각형에 대한 정보
+    var x2 = parseInt(you.style.left); //
+    var y2 = parseInt(you.style.top)//
+    var w2 = parseInt(you.style.width); //
+    var h2 = parseInt(you.style.height); //
+
+    var check1 = (x1+w1) >=x2 && (y1+h1) >= y2 //2사분면에 대한 충돌판단
+    var check2 = false; //3사분면에 대한 충돌판단
+    var check3 = false; //4사분면에 대한 충돌판단
+    var check4 = false; //1사분면에 대한 충돌판단
+    
+    result = check1 ||check2 || check3 || check4;
+    return result;
+}
+
+//실시간 좌표 출력 obj:누구에게,  
+function log(obj, x, y){
+    //
+    obj.innerText="x:"+x+" , y:"+y;
+}
+
+
+//한번 누르면 들고다니고, 또한번 누르면, 내려놓게
+function take(){
+    //
+    flag=!flag; //상태 뒤집기!
+}
+
+window.addEventListener("load",function(){
+    //
+    init();
+});
+</script>
+</head>
+<body onmousemove="drag()">
+    <div style="width:100%;height:600px;background:yellow">
+        <div id="box1" onclick="take()"></div>
+        <div id="box2"></div>
+</div>
+</body>
+</html>

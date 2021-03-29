@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>모자이크</title>
+
+<script src="../js/Rect.js"></script>
+<script>
+    var container;
+    var cellSize = 50; //셀하나당 너비, 높이가 같은 정사각형
+    var cols = 10; //호수 즉 column 컬럼의 갯수
+    var rows = 10; //층수 즉 record 갯수
+    var a = 0; //층수
+    var i = 0; //호수
+    var count = 0; //setInterval이 언제까지 수행할지 그 범위를 알아야 멈추므로
+                        // 즉 카운터를 세 나가다가 일정 시점에 도달하면 멈춘다
+
+    function init(){
+        //
+        container = document.createElement("div");
+        container.style.width = cellSize*cols + "px";
+        container.style.height = cellSize*rows + "px";
+        container.style.margin = "auto";
+        container.style.backgroundImage = "url(../images/toy/i.png)";
+        container.style.backgroundSize=(cellSize*cols)+"px "+(cellSize*rows)+"px";
+        container.style.position = "relative";
+
+        //화면에 부착
+        document.body.appendChild(container);
+
+        //createRect();
+    }
+
+    //사각형 셀 생성하기
+    function createRect(){
+        //
+        //10호의 7층짜리 아파트에 Rect 인스턴스를 채우자
+        //for(var a=0; a<rows; a++){   //층수
+            //for(var i=0; i<cols; i++){  //호수
+                //constructor(container, width, height, x, y, bg)
+                new Rect(container, cellSize, cellSize, i*cellSize, a*cellSize, "orange");
+                i++;
+
+                //i가 호수의 끝에 도달하면 다시 i를 0으로 돌려놓아야 순환된다
+                if(i % cols==0){
+                    a++; //층수 증가
+                    i = 0; //i다시 돌려놓음
+                }
+            //}
+        //}
+    }
+
+    //반목문은 너무 빠르므로, 원하는 시간을 지정하여 반복수행을 대신 해본다
+    function auto(){
+        //
+        if(count < (cols*rows)){
+            console.log("현재 카운트값은",count);
+            createRect();
+            count++;
+        }
+    }
+    
+    window.addEventListener("load",function(){
+        //
+        init();
+        setInterval("auto()",200); //무한루프
+    });
+</script>
+</head>
+<body>
+
+</body>
+</html>

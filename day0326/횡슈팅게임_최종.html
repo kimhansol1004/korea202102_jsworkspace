@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>횡슈팅게임</title>
+<style>
+*{
+    margin: 0px;
+    padding: 0px;
+}
+#wrapper{
+    width: 100%;
+    height: 600px;
+    background: url("../images/shooting/gamee_bg.png");
+    position: relative;
+    overflow: hidden;
+}
+
+#info{
+    background:white;
+    opacity: 0.4;
+    position: relative;
+}
+</style>
+
+<script src="../js/lib.js"></script>
+<script src="../js/Plane.js"></script>
+<script src="../js/Bullet.js"></script>
+<script src="../js/Enemy.js"></script>
+<script src="../js/Hp.js"></script>
+<script src="../js/Item.js"></script>
+<script src="../js/ItemRole.js"></script>
+
+<script>
+var wrapper;
+var info;
+var bgX = 0; //배경처리용 변수
+var plane; //주인공 제어를 위한 전역변수
+var bulletArray = new Array(); //총알 여럿를 가리키기 위한 전역변수
+var enemyArray = []; //적군 여럿을 가리키기 위한 배열 전역변수
+var enemySrc = ["e1.png","e2.png","e3.png","e4.png","e5.png"]
+var hpArray = []; //hp를 담아놓을 배열
+var itemArray = []; //생성된 아이템을 받아놓는 배열
+var candySrc = ["moon1.png","moon2.png","moon3.png"];
+
+var count = 0; //interval 조절을 위한 카운터
+var bulletSrc = ["ball.png","missile1.png","missile2.png","missile3.png"];
+var weaponIndex = 0;
+var roleArray = [];
+var loopFlag = true;
+var speed = 5;
+
+function init(){
+    //
+    wrapper = document.getElementById("wrapper");
+    info = document.getElementById("info");
+    //게임가동과 동시에 주인공 등장
+    createHero();
+    createHp();
+
+    //적군등장
+    createEnemy();
+
+    //아이템 정보 생성
+    createItemRole();
+
+    //body태그에 키보드 이벤트 연결
+    document.body.addEventListener("keydown",function(){
+        //
+        pressDown();
+    });
+
+    document.body.addEventListener("keyup",function(){
+        //
+        pressUp();
+    });
+}
+
+function pressUp(){
+    //
+    switch(event.keyCode){
+        case 37 : plane.velX = 0; break;
+        case 39 : plane.velX = 0; break;
+        case 38 : plane.velY = 0; break;
+        case 40 : plane.velY = 0; break;
+    }
+}
+
+//키보드 제어 함수 : space bar - 총알, b - 폭탄, i - 아이템공격
+function pressDown(){
+    //
+    var key = event.keyCode; //아스키 코드 구하기
+    //console.log("당신이 누른 키보드와 매칭되는 십진수 아스키 코드는", key);
+
+    //4가지 조건을 따져봐야 한다 (if 단일 조건, else if 다중조건, if~else 조건, 반대의 경우)
+    //좌, 우 x
+    /*
+    if(key==39){
+        plane.x+=10; //상태값 변화 우 
+    }else if(key==37){
+        plane.x-=10; //상태값 변화  좌
+    }else if(key==40){
+        plane.y+=10; //상태값 변화 아래
+    }else if(key==38){
+        plane.y-=10; //상태값 변화 위
+    }
+    */
+   switch(key){
+       case 39 : plane.velX=speed; break;
+       case 37 : plane.velX=-speed; break;
+       case 40 : plane.velY=speed; break;
+       case 38 : plane.velY=-speed; break;
+       case 32 : fire();break;
+       case 27 : loopFlag = !loopFlag; break;
+   }
+    //plane.render();//렌더링(그래픽 처리)
+
+    //상, 하 y
+
+}
+
+    //총알을 등장시키자
+    function fire(){
+        //constructor(container, src, width, height, x, y, velX, velY)
+        var bullet = new Bullet(wrapper, "../images/shooting/"+bulletSrc[weaponIndex],16,16, plane.x+plane.width, plane.y+(plane.height/2)-(8), 10,0);
+        bulletArray.push(bullet); //총알 배열에 방금 태어난 총알 인스턴스 추가하기!!
+    }
+
+
+    //주인공등장
+    function createHero(){
+        //
+        // constructor(container, src, width, height, x, y)
+        plane = new Plane(wrapper, "../images/shooting/plane.png", 70,55,100,200,0,0);
+    }
+
+    function createHp(){
+        // constructor(container, src, width, height, x, y)
+
+        for(var i=0; i<3; i++){
+            hpArray[i] = new Hp(info, "../images/shooting/heart.png", 20, 20, i*23, 0);
+        }
+    }
+
+    //적군 등장
+    function createEnemy(){
+        //
+        // constructor(container, src, width, height, x, y)
+
+        //적군 5마리 등장시키기
+        for(var i=0; i<enemySrc.length;i++){
+            enemyArray[i] = new Enemy(wrapper, "../images/shooting/"+enemySrc[i] , 60,40, screen.width, 200+60*i ,-2,0);
+        }   
+    }
+
+    //아이템의 역할 생성
+        /*
+        아이템을 정의한다 
+        candy0.png) 무기를 미사일로 전환 missile1.png
+        candy1.png) 적군 모두 소멸
+        candy2.png) hp 추가
+        candy3.png) 주인공의 속도 업그레이드
+        */
+    function createItemRole(){
+        //
+        for(var i=0;i<candySrc.length;i++){
+            var itemRole = new ItemRole(i, "../images/shooting/"+candySrc[i]);
+            roleArray.push(itemRole);
+        }
+    }
+
+    //아이템 등장 (랜덤등장)
+    function createItem(){
+        //constructor(itemRole, container, width, height, x, y, velX, velY)
+        for(var i=0;i<candySrc.length;i++){
+            var item = new Item(roleArray[i] , wrapper, 35, 35, 
+            screen.width+(getRandom(100)) , 50+getRandom(500) , -3 , 0);
+            itemArray.push(item);
+        }
+    }
+    //배경 처리
+    function bgEffect(){
+        //
+        bgX--;
+        wrapper.style.backgroundPosition = bgX + "px 0px";
+    }
+
+    //무기교체
+    function changeWeapon(){
+        console.log("무기 교체합니다");    
+        weaponIndex=1;
+    }
+
+    //적군소멸
+    function clearEnemy(){
+        //enemyArray 배열에 있는 모든 요소 지우고, 화면에서도 지우기
+        var len = enemyArray.length;
+        for(var i=0; i<len; i++){
+            wrapper.removeChild(enemyArray[0].img);
+            enemyArray.splice(0,1);
+    }
+}
+
+    //hp추가 
+function increaseHp(){
+    //배열의 끝에 객체를 생성하여 추가 hpArray.push(객체생성)
+    if(hpArray.length<4){
+        var hp=new Hp(info, "../images/shooting/heart.png", 20, 20, (hpArray.length)*23 , 0);
+        hpArray.push(hp);
+    }   
+}
+
+    //스피드증가 : 주인공의 velX, velY 증가
+    function speedUp(){
+        speed =15;
+}
+
+    function gameLoop(){
+        //
+        //console.log("저 심장 뛰어요!!");
+        if(loopFlag){
+            bgEffect();
+
+            plane.tick(); //물리량 변화
+            plane.render(); //그래픽 처리
+
+            //생성된 모든 총알에 대해 각각 tick(), render() 호출
+            for(var i=0; i<bulletArray.length;i++){
+                bulletArray[i].render();
+                
+                //배열 삭제는 여기서 수행되기 때문에, 화면에서의 삭제를 먼저 하고 나서 배열제거
+                bulletArray[i].tick();  
+            }
+            for(var i=0; i<enemyArray.length;i++){
+                enemyArray[i].render();
+                enemyArray[i].tick();
+            }
+
+            for(var i=0; i<itemArray.length; i++){
+                itemArray[i].render();
+                itemArray[i].tick();
+            }
+
+            //아이템이 등장할 시점을 카운터를 세서, 원하는 시간 interval 조절
+            if(count%600 == 0){
+                createItem();
+            }
+
+            log();
+            count++;
+        }
+
+    }
+
+    
+//각종 실시간 정보를 출력할 함수
+function log(){
+    var str="총알갯수: "+bulletArray.length;
+    str = str + ", 적군수:"+enemyArray.length;
+
+    document.getElementById("status").innerText=str;
+}
+
+window.addEventListener("load", function(){
+    init();
+    setInterval("gameLoop()",10); //fps
+}); 
+
+</script>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="info">
+            <div id="status" style="margin-left:130px;"></div>
+        </div>
+    </div>
+</body>
+</html>

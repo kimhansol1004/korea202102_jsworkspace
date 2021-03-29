@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>횡슈팅게임</title>
+<style>
+*{
+    margin: 0px;
+    padding: 0px;
+}
+#wrapper{
+    width: 100%;
+    height: 600px;
+    background: url("../images/shooting/gamee_bg.png");
+    position: relative;
+    overflow: hidden;
+}
+
+#info{
+    background:white;
+    opacity: 0.4;
+}
+</style>
+
+<script src="../js/lib.js"></script>
+<script src="../js/Plane.js"></script>
+<script src="../js/Bullet.js"></script>
+<script src="../js/Enemy.js"></script>
+<script>
+var wrapper;
+var info;
+var bgX = 0; //배경처리용 변수
+var plane; //주인공 제어를 위한 전역변수
+var bulletArray = new Array(); //총알 여럿를 가리키기 위한 전역변수
+var enemyArray=[]; //적군 여럿을 가리키기 위한 배열 전역변수
+var enemySrc=["e1.png","e2.png","e3.png","e4.png","e5.png"]
+
+function init(){
+    //
+    wrapper = document.getElementById("wrapper");
+    info = document.getElementById("info");
+    //게임가동과 동시에 주인공 등장
+    createHero();
+
+    //적군등장
+    createEnemy();
+
+    //body태그에 키보드 이벤트 연결
+    document.body.addEventListener("keydown",function(){
+        //
+        pressDown();
+    });
+
+    document.body.addEventListener("keyup",function(){
+        //
+        pressUp();
+    });
+}
+
+function pressUp(){
+    //
+    switch(event.keyCode){
+        case 37 : plane.velX = 0; break;
+        case 39 : plane.velX = 0; break;
+        case 38 : plane.velY = 0; break;
+        case 40 : plane.velY = 0; break;
+    }
+}
+
+//키보드 제어 함수 : space bar - 총알, b - 폭탄, i - 아이템공격
+function pressDown(){
+    //
+    var key = event.keyCode; //아스키 코드 구하기
+    //console.log("당신이 누른 키보드와 매칭되는 십진수 아스키 코드는", key);
+
+    //4가지 조건을 따져봐야 한다 (if 단일 조건, else if 다중조건, if~else 조건, 반대의 경우)
+    //좌, 우 x
+    /*
+    if(key==39){
+        plane.x+=10; //상태값 변화 우 
+    }else if(key==37){
+        plane.x-=10; //상태값 변화  좌
+    }else if(key==40){
+        plane.y+=10; //상태값 변화 아래
+    }else if(key==38){
+        plane.y-=10; //상태값 변화 위
+    }
+    */
+   switch(key){
+       case 39 : plane.velX=5;break;
+       case 37 : plane.velX=-5;break;
+       case 40 : plane.velY=5;break;
+       case 38 : plane.velY=-5;break;
+       case 32 : fire();break;
+   }
+    plane.render();//렌더링(그래픽 처리)
+
+    //상, 하 y
+
+}
+
+//총알을 등장시키자
+function fire(){
+    //constructor(container, src, width, height, x, y, velX, velY)
+    var bullet = new Bullet(wrapper, "../images/shooting/ball.png",16,16, plane.x+plane.width, plane.y+(plane.height/2)-(8), 10,0);
+    bulletArray.push(bullet); //총알 배열에 방금 태어난 총알 인스턴스 추가하기!!
+}
+
+
+//주인공등장
+function createHero(){
+    //
+    // constructor(container, src, width, height, x, y)
+    plane = new Plane(wrapper, "../images/shooting/plane.png", 95,80,100,200,0,0);
+}
+
+//적군 등장
+function createEnemy(){
+    //
+    // constructor(container, src, width, height, x, y)
+
+    //적군 5마리 등장시키기
+    for(var i=0; i<enemySrc.length; i++){
+        enemyArray[i] = new Enemy(wrapper, "../images/shooting/"+enemySrc[i], 70 ,50, screen.width, 200+60*i, -2 ,0);
+    }
+}
+
+//배경 처리
+function bgEffect(){
+    //
+    bgX--;
+    wrapper.style.backgroundPosition = bgX + "px 0px";
+}
+
+function gameLoop(){
+    //
+    //console.log("저 심장 뛰어요!!");
+    bgEffect();
+
+    plane.tick(); //물리량 변화
+    plane.render(); //그래픽 처리
+
+    //생성된 모든 총알에 대해 각각 tick(), render() 호출
+    for(var i=0; i<bulletArray.length;i++){
+        bulletArray[i].render();
+        
+        //배열 삭제는 여기서 수행되기 때문에, 화면에서의 삭제를 먼저 하고 나서 배열제거
+        bulletArray[i].tick();  
+    }
+    for(var i=0; i<enemyArray.length;i++){
+        enemyArray[i].tick();
+        enemyArray[i].render();
+    }
+        log();
+
+}
+
+//각종 실시간 정보를 출력할 함수
+function log(){
+    //
+    var str="총알갯수: "+bulletArray.length;
+    str = str + ", 적군수:"+enemyArray.length;
+
+    info.innerText = str;
+}
+
+window.addEventListener("load", function(){
+    //
+    init();
+    setInterval("gameLoop()", 10);  //fps
+});
+</script>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="info">게임과 관련된 정보</div>
+    </div>
+</body>
+</html>
