@@ -1,0 +1,26 @@
+<script>
+/*
+1) 2015년 3월 25일에서 100후는 몇월, 몇일 무슨 요일인지 구하시오
+2) 2035년 7월은 무슨 요일부터 시작하는지 구하시오 (7월이 1일이 무슨 요일인지)
+*/
+
+var d= new Date();
+d.setFullYear(2015);
+d.setMonth(2); //3월
+d.setDate(25);
+
+d.setDate(d.getDate()+100); //날짜는 1부터 시작
+console.log(d);
+
+/*미래로 설정하기*/
+var d2 = new Date();
+d2.setFullYear(2035);
+d2.setMonth(6); //7월
+//몇요일부터 시작하는 월인지 알려면,1일로 조작하면 된다
+d2.setDate(1);
+
+console.log("시작요일은", d2.getDay());
+
+console.log("6.25.한국전쟁의 요일은", new Date(1950,5,25).getDay());
+
+</script>
