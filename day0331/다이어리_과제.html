@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<style>
+*{margin: auto;}
+#navi{
+    width: 100%;
+    height: 100px;
+    text-align: center;
+    position: relative;
+}
+#navi span{
+    font-size: 30px;
+}
+#bt_prev, #bt_next{
+    width:50px;
+    height:35px;
+    background:rgb(129, 130, 131);
+    color:#FFFFFF;
+    border:0px;
+}
+#bt_prev{
+    position: absolute;
+    left:0px;
+}
+#bt_next{
+    position: absolute;
+    right:0px;
+}
+#day_area{
+    height: 30px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 100px;
+    font-size: 30px;
+}
+#date_area{
+    height: 600px;
+}
+</style>
+<script src="../js/DateBox.js"></script>
+<script src="../js/lib.js"></script>
+<script>
+var cellSize=100; //가로*세로 100인 사각형
+var wrapper;
+var dayArray=["Sun","Mon","Tue","Wed","Thur","Fri","Sat"];
+
+var currentYear = new Date().getFullYear();
+var currentMonth = new Date().getMonth();
+
+
+function init(){
+    wrapper=document.getElementById("wrapper"); // document 객체의 createElement() 메서드
+    createWrapper();
+    createDays(); //요일 박스 생성
+    createDate(); //날짜 박스 생성
+    getCurrentDate(); //달력제목으로 오늘 날짜를 기본적으로 출력하자
+}
+
+//현재 날짜 구해오기
+function getCurrentDate(){
+    var date = new Date(); //아무것도 주지 않은 오늘 날짜
+    currentYear = date.getFullYear(); //오늘의 연도
+    currentMonth = date.getMonth(); //오늘의 월 0부터 ~ 11까지
+
+    //출력할때는 언제나 1을 더해서 출력하자
+   setTitle(currentYear+"년"+getZeroString(currentMonth+1)+"월");  //날짜 제목 출력
+}
+
+//각월의 시작 요일을 알아야 날짜의 시작 위치를 결정짓는다
+function getFirstDayOfMonth(year, month){
+    //원리: 각월의 1일로 날짜를 조작한 후, 해당 요일을 물어보자
+    var date = new Date(year, month, 1); //넘겨받은 매개변수로 날짜를 조작함
+    return date.getDay(); //요일 반환
+}
+
+//각월이 몇일가지 있는지 (5월-31일까지, 6-30일까지 구하기)
+//주의 : 함수 호출시 7월 말이 궁금할 경우, 매개변수로는 7 or 8월?
+function getLastDate(year, month){
+    var d = new Date(year, month, 0);
+    return d.getDate(); //말일 날짜 반환
+}
+
+function createWrapper(){
+    wrapper.style.width=cellSize*7+"px";
+    wrapper.style.height=100 + 100 + cellSize*6 + "px";
+    wrapper.style.background="rgb(231, 229, 229)";
+    wrapper.style.margin="auto";
+    wrapper.style.overflow="hidden";
+}
+
+//일, 월,화..... 박스 생성
+function createDays(){
+    //constructor(container, width, height, text, bg)
+    for(var i=0; i<dayArray.length; i++){
+        var box = new DateBox(document.getElementById("day_area"), cellSize,cellSize,dayArray[i],"rgb(173, 177, 180)");
+    }
+}
+
+function getEndOfMonth(year, month) {
+    //
+    return new Date(year, month + 1, 0).getDate();
+}
+
+//날짜 박스 생성
+function createDate(){
+    //constructor(container, width, height, text, bg)
+    var startIndex = getFirstDayOfMonth(currentYear, currentMonth);
+    var endOfMoth = getEndOfMonth(currentYear, currentMonth);
+
+    for(var i = 1; i <= endOfMoth + startIndex; i++){
+        if(i > startIndex) {
+            var dateBox = new DateBox(document.getElementById("date_area"), cellSize, cellSize, i - startIndex, "#ffffff");
+        } else {
+            var dateBox = new DateBox(document.getElementById("date_area"), cellSize, cellSize, '', "#ffffff");
+        }
+    }
+}
+
+function clearDate() {
+    var parent = document.getElementById('date_area');
+    var children = parent.childNodes;
+    var childrenSize = parent.childElementCount;
+
+    for(var index = childrenSize - 1; index >= 0; index--) {
+        parent.removeChild(children[index]);
+    }
+}
+
+//달력의 날짜는 변경이 자주 일어나므로, 함수로 정의해놓겠다
+function setTitle(text){
+    document.getElementById("cal_title").innerText = text;
+}
+
+function onClickPrevious() {
+    //
+    var month = currentMonth - 1;
+    var year = currentYear;
+    if(month === -1) {
+        month = 11;
+        year = year - 1;
+    }
+    currentYear = year;
+    currentMonth = month;
+
+    setTitle(year+"년"+getZeroString(month+1)+"월");  //날짜 제목 출력
+    // document.removeChild(document.getElementById("date_area"));
+    clearDate();
+
+    createDate();
+}
+
+function onClickNext() {
+    //
+    var month = currentMonth + 1;
+    var year = currentYear;
+    if(month === 12) {
+        month = 0;
+        year = year + 1;
+    }
+    currentYear = year;
+    currentMonth = month;
+
+    setTitle(year+"년"+getZeroString(month+1)+"월");  //날짜 제목 출력
+    // document.removeChild(document.getElementById("date_area"));
+    clearDate();
+
+    createDate();
+}
+
+window.addEventListener("load", function(){
+    init();
+});
+</script>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="navi">
+            <button id="bt_prev" onclick="onClickPrevious()">이전</button>
+            <span id="cal_title"></span>
+            <button id="bt_next" onclick="onClickNext()">이후</button>
+        </div>
+        <div id="day_area"></div>
+        <div id="date_area"></div>
+    </div>
+</body>
+</html>

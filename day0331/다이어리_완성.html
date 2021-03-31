@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<style>
+*{margin: auto;}
+#navi{
+    width: 100%;
+    height: 100px;
+    text-align: center;
+    position: relative;
+}
+#navi span{
+    font-size: 30px;
+}
+#bt_prev, #bt_next{
+    width:50px;
+    height:35px;
+    background:rgb(129, 130, 131);
+    color:#FFFFFF;
+    border:0px;
+}
+#bt_prev{
+    position: absolute;
+    left:0px;
+}
+#bt_next{
+    position: absolute;
+    right:0px;
+}
+#day_area{
+    height: 100px;
+}
+#date_area{
+    height: 600px;
+}
+#regist_from{
+    width: 600px;
+    height: 500px;
+    background: #636262;
+    border: 3px solid rgb(66, 65, 65);
+    position: absolute;
+    left: 50px;
+    top: 150px;
+    border-radius: 20px;
+    display: none; /*최초에는 안보여야함 (원할때만 나오게 실행)*/
+    text-align: center;
+}
+#regist_from input{
+    width: 90%;
+}
+#regist_from textarea{
+    width: 90%;
+    height: 400px;
+}
+</style>
+
+<script src="../js/DateBox.js"></script>
+<script src="../js/lib.js"></script>
+<script>
+var cellSize=100; //가로*세로 100인 사각형
+var wrapper;
+var dayArray=["Sun","Mon","Tue","Wed","Thur","Fri","Sat"];
+var boxArray=[]; //42개의 날짜 박스를 접근하기 위한 배열
+var d; //현재 사용중인 날짜 객체
+var selectedIndex =0; //현재 보고 있는 데이터 객체의 boxArray에서의 index
+
+function init(){
+    wrapper=document.getElementById("wrapper"); // document 객체의 createElement() 메서드
+    createWrapper();
+    createDays(); //요일 박스 생성
+    createDate(); //날짜 박스 생성
+    getCurrentDate(); //달력제목으로 오늘 날짜를 기본적으로 출력하자
+}
+
+//현재 날짜 구해오기
+function getCurrentDate(){
+    d = new Date(); //이전, 다음, 기타여러 가능들 때문에라도 전역번수이면 좋다
+
+    //출력할때는 언제나 1을 더해서 출력하자
+   printDate(); //날짜 출력
+}
+
+//각월의 시작 요일을 알아야 날짜의 시작 위치를 결정짓는다
+function getFirstDayOfMonth(year, month){
+    //원리: 각월의 1일로 날짜를 조작한 후, 해당 요일을 물어보자
+    var d = new Date(year, month, 1); //넘겨받은 매개변수로 날짜를 조작함
+    return d.getDay(); //요일 반환
+}
+
+//각월이 몇일가지 있는지 (5월-31일까지, 6-30일까지 구하기)
+//주의 : 함수 호출시 7월 말이 궁금할 경우, 매개변수로는 7 or 8월? 
+function getLastDate(year, month){
+    var d = new Date(year, month+1, 0);
+    return d.getDate(); //말일의 날짜 반환
+}
+
+function createWrapper(){
+    wrapper.style.width=cellSize*7+"px";
+    wrapper.style.height=100 + 100 + cellSize*6 + "px";
+    wrapper.style.background="rgb(231, 229, 229)";
+    wrapper.style.margin="auto";
+    wrapper.style.overflow="hidden";
+    wrapper.style.position = "relative";
+}
+
+//일, 월,화..... 박스 생성
+function createDays(){
+    //constructor(container, width, height, text, bg)
+    for(var i=0; i<dayArray.length; i++){
+        var box = new DateBox(document.getElementById("day_area"), cellSize,cellSize,dayArray[i],"rgb(173, 177, 180)");
+    }
+}
+
+//날짜 박스 생성
+function createDate(){
+    //constructor(container, width, height, text, bg)
+    for(var i=0; i<dayArray.length*6; i++){
+        var dateBox = new DateBox(document.getElementById("date_area"), cellSize, cellSize, i, "#ffffff");
+        //생성된 날짜 박스를 배열에 차곡 차곡 쌓아 좋자! 왜? 그래야 나중에 접근한다
+        boxArray.push(dateBox);
+    }
+}
+
+//달력의 날짜는 변경이 자주 일어나므로, 함수로 정의해놓겠다
+function setTitle(){
+    var yy = d.getFullYear(); //오늘의 연도
+    var mm = d.getMonth(); //오늘의 월 0부터 ~ 11까지
+    var str = yy+"년"+getZeroString(mm+1)+"월";
+
+    document.getElementById("cal_title").innerText = str;
+}
+
+//이전월
+function prevMonth(){
+    d.setDate(1); //1일로 초기화
+    d.setMonth(d.getMonth()-1); //현재 사용중인 월에 - 1 //날짜 조작하고
+    printDate();  //출력하고
+}
+
+//다음월
+function nextMoth(){
+    //기존 객체를 이용하기 때문에, 날짜도 함께 변경
+    d.setDate(1); //1일로 돌려놓고
+    d.setMonth(d.getMonth()+1); //월 증가
+    printDate();
+}
+
+//현재 화면에 날짜칸 div에 출력된 텍스트를 지우기
+function resetDate(){
+    for(var i=0; i<boxArray.length; i++ ){
+        boxArray[i]. div. innerText=""; //초기화
+    }
+}
+
+//날짜를 출력하는 함수
+function printDate(){
+    resetDate(); //싹 지우기
+    setTitle();
+
+    var n=1;
+    for(var i=0; i<boxArray.length; i++){
+
+        //단, 이날짜는 i가 각 월의 시작요일을 지날때부터
+        if(i>= getFirstDayOfMonth(d.getFullYear() , d.getMonth())){
+            //아래의 출력은 또 다른 조건을 걸어야 한다. 각 월의 말일까지만
+            if(n <= getLastDate(d.getFullYear(), d.getMonth())){ //말일에 도달할때 까지만 출력
+                boxArray[i].div.innerText= n+"일"; 
+                n++;
+             }
+        }
+    }
+}
+
+//일정을 등록하는 입력 폼 띄우기
+function openDialog(index){
+    selectedIndex = index; //인덱스 보관
+    //alert("지금 당신이 누른 박스의 순번은" + index);
+    document.getElementById("regist_from").style.display = "block"; //보이게
+}
+
+//팝업 닫기
+function closeDialog(){
+    document.getElementById("regist_from").style.display="none";
+}
+
+function regist(){ //내용 저장
+    //지금 선택한 날짜 박스에 해당하는 DateBox객체안에 제목과 내용을 보관하자
+    var dateBox = boxArray[selectedIndex]; 
+    dateBox.title = document.getElementById("t_title").value; //api document 근거함
+    dateBox.content= document.getElementById("t_content").value;
+    closeDialog(); //창닫기 display : none
+
+    //객체 안에 등록된 내용을 div의 텍스트로 출력
+    var str = dateBox.div.innerText //기존에 등록되어 있던 텍스트인 3일..4일..
+    dateBox.div.innerHTML = str + "<br>"+ dateBox.title + "<br>" + dateBox.content;
+
+}
+
+window.addEventListener("load", function(){
+    init();
+});
+</script>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="regist_from">
+            <button onclick="closeDialog()">닫기</button>
+            <br>
+            <input type="text" placeholder="제목입력" id="t_title">
+            <br>
+            <textarea placeholder="내용입력" id="t_content"></textarea>
+            <br>
+            <button onclick="regist()">등록</button>
+        </div>
+        <div id="navi">
+            <button id="bt_prev" onclick="prevMonth()">이전월</button>
+            <span id="cal_title">2021년 03월</span>
+            <button id="bt_next" onclick="nextMoth()">다음월</button>
+        </div>
+        <div id="day_area"></div>
+        <div id="date_area"></div>
+    </div>
+</body>
+</html>
